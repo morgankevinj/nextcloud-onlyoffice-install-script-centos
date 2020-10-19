@@ -1,0 +1,8 @@
+[Unit]
+Description=Disables Transparent Huge Pages
+[Service]
+Type=simple
+ExecStart=/bin/sh -c "echo 'never' > /sys/kernel/mm/transparent_hugepage/enabled && echo 'never' > /sys/kernel/mm/transparent_hugepage/defrag"
+[Install]
+WantedBy=redis.service
+WantedBy=postgresql.service

@@ -1,0 +1,47 @@
+--- /usr/bin/documentserver-configure.sh	2020-09-16 12:21:49.000000000 -0400
++++ documentserver-configure.noninteractive.sh	2020-10-04 22:59:34.530353239 -0400
+@@ -23,6 +23,17 @@
+ JWT_SECRET=${JWT_SECRET:-secret}
+ JWT_HEADER=${JWT_HEADER:-Authorization}
+ 
++AMQP_SERVER_URL="amqp://guest:guest@localhost"
++REDIS_HOST="localhost"
++DB_HOST="localhost"
++DB_NAME="onlyoffice"
++DB_USER="onlyoffice"
++DB_PWD=$(openssl rand -base64 15)
++
++sudo -i -u postgres psql -c "CREATE DATABASE $DB_NAME;"
++sudo -i -u postgres psql -c "CREATE USER $DB_USER WITH password '$DB_PWD';"
++sudo -i -u postgres psql -c "GRANT ALL privileges ON DATABASE $DB_NAME TO $DB_USER;"
++
+ [ $(id -u) -ne 0 ] && { echo "Root privileges required"; exit 1; }
+ 
+ create_local_configs(){
+@@ -48,13 +59,6 @@
+ 
+ 	[ -a /etc/nginx/conf.d/onlyoffice-documentserver.conf ] && \
+ 	mv /etc/nginx/conf.d/onlyoffice-documentserver.conf /etc/nginx/conf.d/onlyoffice-documentserver.conf.old
+-
+-	echo -n "Restarting services... "
+-	for SVC in supervisord nginx
+-	do
+-		systemctl restart $SVC 
+-	done
+-	echo "OK"
+ }
+ 
+ save_db_params(){
+@@ -372,10 +376,10 @@
+ 
+ create_local_configs
+ 
+-input_db_params
++#input_db_params
+ execute_db_script
+ 
+-input_amqp_params
++#input_amqp_params
+ parse_amqp_url
+ establish_amqp_conn || exit $?
+ 

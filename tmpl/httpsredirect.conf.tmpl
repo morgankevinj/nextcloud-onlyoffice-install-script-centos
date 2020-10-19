@@ -1,0 +1,8 @@
+server {
+  listen 0.0.0.0:80;
+  listen [::]:80; 
+  server_name {{FQDN_LIST}};
+  server_tokens off;
+
+  rewrite ^ https://$host$request_uri? permanent;
+}

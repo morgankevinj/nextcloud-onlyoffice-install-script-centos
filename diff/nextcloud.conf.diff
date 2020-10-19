@@ -1,0 +1,71 @@
+--- /etc/php-fpm.d/www.conf	2020-05-06 22:32:31.000000000 -0400
++++ /etc/php-fpm.d/nextcloud.conf	2020-09-16 22:40:34.756540592 -0400
+@@ -1,7 +1,7 @@
+ ; Start a new pool named 'www'.
+ ; the variable $pool can we used in any directive and will be replaced by the
+ ; pool name ('www' here)
+-[www]
++[nextcloud]
+ 
+ ; Per pool prefix
+ ; It only applies on the following directives:
+@@ -21,9 +21,9 @@
+ ; Note: The user is mandatory. If the group is not set, the default user's group
+ ;       will be used.
+ ; RPM: apache user chosen to provide access to the same directories as httpd
+-user = apache
++user = nextcloud
+ ; RPM: Keep a group allowed to write in log dir.
+-group = apache
++group = nextcloud 
+ 
+ ; The address on which to accept FastCGI requests.
+ ; Valid syntaxes are:
+@@ -35,7 +35,7 @@
+ ;                            (IPv6 and IPv4-mapped) on a specific port;
+ ;   '/path/to/unix/socket' - to listen on a unix socket.
+ ; Note: This value is mandatory.
+-listen = /run/php-fpm/www.sock
++listen = /run/php-fpm/nextcloud.sock
+ 
+ ; Set listen(2) backlog.
+ ; Default Value: 511
+@@ -389,11 +389,11 @@
+ ; Pass environment variables like LD_LIBRARY_PATH. All $VARIABLEs are taken from
+ ; the current environment.
+ ; Default Value: clean env
+-;env[HOSTNAME] = $HOSTNAME
+-;env[PATH] = /usr/local/bin:/usr/bin:/bin
+-;env[TMP] = /tmp
+-;env[TMPDIR] = /tmp
+-;env[TEMP] = /tmp
++env[HOSTNAME] = $HOSTNAME
++env[PATH] = /usr/local/bin:/usr/bin:/bin
++env[TMP] = /tmp
++env[TMPDIR] = /tmp
++env[TEMP] = /tmp
+ 
+ ; Additional php.ini defines, specific to this pool of workers. These settings
+ ; overwrite the values previously defined in the php.ini. The directives are the
+@@ -416,9 +416,9 @@
+ ;                specified at startup with the -d argument
+ ;php_admin_value[sendmail_path] = /usr/sbin/sendmail -t -i -f www@my.domain.com
+ ;php_flag[display_errors] = off
+-php_admin_value[error_log] = /var/log/php-fpm/www-error.log
++php_admin_value[error_log] = /var/log/php-fpm/nextcloud-error.log
+ php_admin_flag[log_errors] = on
+-;php_admin_value[memory_limit] = 128M
++php_admin_value[memory_limit] = 512M
+ 
+ ; Set the following data paths to directories owned by the FPM process user.
+ ;
+@@ -429,6 +429,6 @@
+ ; See warning about choosing the location of these directories on your system
+ ; at http://php.net/session.save-path
+ php_value[session.save_handler] = files
+-php_value[session.save_path]    = /var/lib/php/session
+-php_value[soap.wsdl_cache_dir]  = /var/lib/php/wsdlcache
+-;php_value[opcache.file_cache]  = /var/lib/php/opcache
++php_value[session.save_path]    = /var/lib/php/nextcloud/session
++php_value[soap.wsdl_cache_dir]  = /var/lib/php/nextcloud/wsdlcache
++php_value[opcache.file_cache]  = /var/lib/php/nextcloud/opcache
